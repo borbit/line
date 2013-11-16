@@ -1,0 +1,10 @@
+{
+  "less_base": [
+    "/blocks/line/line.less"
+  ],
+  "js_base": [
+    "/js/libs/hammer.js",
+    "/js/libs/underscore.js",
+    "/blocks/line/line.js"
+  ]
+}

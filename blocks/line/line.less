@@ -1,0 +1,40 @@
+.line {
+  @section-width: 320px;
+  @section-height: 213px;
+
+  overflow-y: scroll;
+  width: @section-width;
+  margin: 0 auto;
+  height: 100%;
+
+  -webkit-overflow-scrolling: touch;
+
+  &__section {
+    overflow: hidden;
+    height: @section-height;
+    width: @section-width;
+  }
+
+  &__photos {
+    display: inline-block;
+    height: @section-height;
+    white-space: nowrap;
+  }
+
+  &__photo {
+    display: inline-block;
+    height: @section-height;
+    width: @section-width;
+    margin: 0;
+      
+    text-align: center;
+    vertical-align: top;
+    line-height: @section-height;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    &_loading {
+      background-image: url("/blocks/line/img/loading.png");
+    }
+  }
+}
