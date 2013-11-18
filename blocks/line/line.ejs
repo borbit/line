@@ -1,9 +1,9 @@
 <div class="line">
-  <% for (var i = 0; i < 100; i += 10) { %>
+  <% for (var i = 0; i < 500; i += 10) { %>
   <section class="line__section">
     <div class="line__photos"><!--
-      <% for (var j = i; j < 100 && j < i + 10; j++) { %>
-   --><figure class="line__photo line__photo_loading" data-src="http://thecatapi.com/api/images/get?format=src&type=jpg&size=med&<%=j%>"></figure><!--
+      <% for (var j = i; j < 500 && j < i + 10; j++) { %>
+   --><figure class="line__photo line__photo_loading" data-src="http://thecatapi.com/api/images/get?format=src&type=jpg&size=small&<%=j%>"></figure><!--
       <% } %>
  --></div>
   </section>
