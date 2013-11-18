@@ -19,9 +19,12 @@
     display: inline-block;
     height: @section-height;
     white-space: nowrap;
+
+    -webkit-backface-visibility: hidden;
   }
 
   &__photo {
+    overflow: hidden;
     display: inline-block;
     height: @section-height;
     width: @section-width;
@@ -35,6 +38,10 @@
     
     &_loading {
       background-image: url("/blocks/line/img/loading.png?embed");
+    }
+
+    img {
+      -webkit-transform: translate3d(0,0,0);
     }
   }
 }

@@ -1,19 +1,10 @@
-function $all(selector, $el) {
-  return Array.prototype.slice.call(($el || document) .querySelectorAll(selector), 0);
-}
-function $one(selector, $el) {
-  return ($el || document).querySelector(selector);
-}
-function $on($el, event, cb) {
-  $el.addEventListener(event, cb, false);
-}
-
 (function() {
   var $line = $one('.line');
   var $sections = $all('.line__section');
 
   var lineHeight = $line.offsetHeight;
   var lineWidth = $line.offsetWidth;
+  var margin = 500;
 
   $sections.forEach(function($section) {
     $section.dataset.top = $section.offsetTop;
@@ -32,19 +23,18 @@ function $on($el, event, cb) {
     var lineY1 = $line.scrollTop;
     var lineY2 = lineY1 + lineHeight;
     
-    $sections
-      .filter(function($section) {
-        return $section.dataset.bottom >= lineY1 &&
-               $section.dataset.top <= lineY2 &&
-              !$section.dataset.inited;
-      })
-      .forEach(function($section) {
-        $section.dataset.inited = true;
-        init($section);
-      });
+    $sections.forEach(function($section) {
+      if ($section.dataset.bottom >= lineY1 - margin &&
+          $section.dataset.top <= lineY2 + margin) {
+        $section.line || ($section.line = Line($section));
+        $section.line.showPhotos();
+      } else if ($section.line) {
+        $section.line.hidePhotos();
+      }
+    });
   }
 
-  function init($section) {
+  function Line($section) {
     var $plate = $one('.line__photos', $section);
     var $photos = $all('.line__photo', $section);
     var hammer = Hammer($plate, {
@@ -54,17 +44,13 @@ function $on($el, event, cb) {
     });
 
     var plateWidth = $photos.length * lineWidth;
-    var palteDelta = 0;
-
-    for (var i = 0; i < $photos.length && i < 2; i++) {
-      loadPhoto($photos[i]);
-    }
+    var plateDelta = 0;
 
     hammer.on('dragleft dragright', function(ev) {
       ev.gesture.preventDefault();
       finishArranging($plate);
 
-      var delta = palteDelta + ev.gesture.deltaX;
+      var delta = plateDelta + ev.gesture.deltaX;
       var translate = 'translate(' + delta + 'px, 0)';
       $plate.style.webkitTransform = translate;
     });
@@ -77,22 +63,40 @@ function $on($el, event, cb) {
 
       if (ev.type == 'swipeleft' || ev.type == 'swiperight' ||
           Math.abs(ev.gesture.deltaX) > lineWidth / 2) {
-        palteDelta += ev.gesture.deltaX < 0 ? -lineWidth : lineWidth;
-        palteDelta = Math.max(-plateWidth + lineWidth, palteDelta)
-        palteDelta = Math.min(palteDelta, 0);
+        plateDelta += ev.gesture.deltaX < 0 ? -lineWidth : lineWidth;
+        plateDelta = Math.max(-plateWidth + lineWidth, plateDelta)
+        plateDelta = Math.min(plateDelta, 0);
       }
       
-      startArranging($plate, palteDelta);
-      loadVisible($photos, palteDelta);
+      startArranging($plate, plateDelta);
+      loadVisible($photos, plateDelta);
     });
+
+    function showPhotos() {
+      var current = -plateDelta / lineWidth;
+      for (var i = current; i < $photos.length && i < current + 2; i++) {
+        loadPhoto($photos[i]);
+      }
+    }
+
+    function hidePhotos() {
+      for (var i = 0; i < $photos.length; i++) {
+        delete $photos[i].dataset.loaded;
+        $photos[i].innerHTML = '';
+      }
+    }
+
+    return {
+      showPhotos: showPhotos
+    , hidePhotos: hidePhotos
+    };
   }
 
-  function startArranging($plate, palteDelta) {
-    var translate = 'translate(' + palteDelta + 'px, 0)';
+  function startArranging($plate, plateDelta) {
+    var translate = 'translate(' + plateDelta + 'px, 0)';
     $plate.style.webkitTransition = '-webkit-transform .3s';
     $plate.style.webkitTransform = translate;
-
-    $plate.dataset.timer = setTimeout(function() {
+    $plate.dataset.timer = $timeout(function() {
       finishArranging($plate);
     }, 333);
   }
@@ -106,7 +110,7 @@ function $on($el, event, cb) {
   function loadVisible($photos, plateDelta) {
     var current = -plateDelta / lineWidth;
     var $photo = $photos[current + 1];
-    
+
     if ($photo && !$photo.dataset.loaded) {
       loadPhoto($photo);
     }
@@ -115,16 +119,19 @@ function $on($el, event, cb) {
   function loadPhoto($photo) {
     var src = $photo.dataset.src;
     $photo.dataset.loaded = true;
+    $photo.classList.add('line__photo_loading');
 
     loadImage(src, function(img) {
-      $photo.style.backgroundImage = 'url(' + img.src + ')';
       $photo.classList.remove('line__photo_loading');
-    })
+      $photo.appendChild(img);
+    });
   }
 
   function loadImage(src, cb) {
     var img = document.createElement('img');
     img.onload = function() { cb(img); };
+    img.setAttribute('draggable', false);
+    img.width = lineWidth;
     img.src = src;
   }
 })();
