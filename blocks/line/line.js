@@ -51,7 +51,7 @@
       finishArranging($plate);
 
       var delta = plateDelta + ev.gesture.deltaX;
-      var translate = 'translate(' + delta + 'px, 0)';
+      var translate = 'translate3d(' + delta + 'px, 0, 0)';
       $plate.style.webkitTransform = translate;
     });
 
@@ -93,8 +93,8 @@
   }
 
   function startArranging($plate, plateDelta) {
-    var translate = 'translate(' + plateDelta + 'px, 0)';
-    $plate.style.webkitTransition = '-webkit-transform .3s';
+    var translate = 'translate3d(' + plateDelta + 'px, 0, 0)';
+    $plate.style.webkitTransition = '-webkit-transform .2s';
     $plate.style.webkitTransform = translate;
     $plate.dataset.timer = $timeout(function() {
       finishArranging($plate);
@@ -119,11 +119,15 @@
   function loadPhoto($photo) {
     var src = $photo.dataset.src;
     $photo.dataset.loaded = true;
-    $photo.classList.add('line__photo_loading');
 
     loadImage(src, function(img) {
-      $photo.classList.remove('line__photo_loading');
+      img.style.opacity = 0;
+      img.style.webkitTransition = 'opacity .3s';
+      
       $photo.appendChild(img);
+      $timeout(function() {
+        img.style.opacity = 1;
+      })
     });
   }
 
