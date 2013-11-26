@@ -1,0 +1,35 @@
+.swipe {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #000;
+}
+
+.swipe__plate {
+  position: relative;
+  height: 100%;
+
+  -webkit-backface-visibility: hidden;
+}
+
+.swipe__photo {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  background: no-repeat center;
+  background-size: contain;
+
+  -webkit-backface-visibility: hidden;
+}
+
+.swipe__index {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+}

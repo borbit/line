@@ -1,8 +1,14 @@
 <div class="line">
-  <% for (var i = 0; i < 500; i += 10) { %>
-  <section class="line__section">
+  <% for (var i = 0; i < 50; i += 10) { %>
+  <%
+    var images = [];
+    for (var j = i; j < 50 && j < i + 10; j++) {
+      images.push('http://thecatapi.com/api/images/get?format=src&type=jpg&size=small&new' + j);
+    }
+  %>
+  <section class="line__section" data-photos='<%- JSON.stringify(images) %>' data-index="0">
     <div class="line__photos"><!--
-      <% for (var j = i; j < 500 && j < i + 10; j++) { %>
+      <% for (var j = i; j < 50 && j < i + 10; j++) { %>
    --><figure class="line__photo line__photo_loading" data-src="http://thecatapi.com/api/images/get?format=src&type=jpg&size=small&<%=j%>"></figure><!--
       <% } %>
  --></div>

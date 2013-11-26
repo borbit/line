@@ -1,11 +1,13 @@
 {
   "less_base": [
-    "/blocks/line/line.less"
+    "/blocks/line/line.less",
+    "/blocks/line/swipe.less"
   ],
   "js_base": [
     "/js/libs/hammer.js",
     "/js/libs/underscore.js",
     "/js/utils.js",
-    "/blocks/line/line.js"
+    "/blocks/line/line.js",
+    "/blocks/line/swipe.js"
   ]
 }

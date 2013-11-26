@@ -9,6 +9,10 @@
   $sections.forEach(function($section) {
     $section.dataset.top = $section.offsetTop;
     $section.dataset.bottom = $section.offsetTop + $section.offsetHeight;
+
+    $on($section, 'click', function() {
+      Swipe($section);
+    });
   })
 
   $on($line, 'scroll', _.debounce(show, 50));
